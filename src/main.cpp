@@ -30,29 +30,40 @@ void setup() {
 
 Mavlink_Messages msg;
 
-String drop_point = "";
-String des_drop_point;
+String drop_state_str;
+Drop_State drop_state;
 int bottle_num;
-double lat, lon, heading;
-double wind_speed, wind_heading;
-double des_lat, des_lon, des_heading;
+double wind[3]; // Wind speed (m/s) in x, y, z (NED)
+Drop_State des_drop_state;
 
 void loop() {
 
-    while (drop_point == "") {
+    // TODO: put some timeouts on this thing!!
+
+    // Read drop point and bottle number from Pi
+    drop_state_str = "";
+    while (drop_state_str == "") {
         if (PiSerial.available() > 0) {
-            drop_point = Serial.readStringUntil('\n');
+            drop_state_str = Serial.readStringUntil('\n');
         }
     }
-    // TODO: Convert drop point data to doubles
+    drop_state.lat = drop_state_str.substring(0, 5).toDouble();
+    drop_state.lon = drop_state_str.substring(5, 10).toDouble();
+    drop_state.heading = drop_state_str.substring(10, 15).toDouble();
 
+    bottle_num = drop_state_str.substring(15, 16).toInt();
+
+    // Read wind speed
     msg = pixhawk.read_messages();
-    Serial.println(msg.attitude.roll);
-    // TODO: Get windspeed
-    // calc_des_drop_state();
+    Serial.println(msg.heartbeat.system_status);
+    wind[0] = msg.wind.wind_x;
+    wind[1] = msg.wind.wind_y;
+    wind[2] = msg.wind.wind_z;
 
-    // TODO: Convert desired drop point data to string
-    PiSerial.println("Desired drop point and heading");
+    des_drop_state = calc_des_drop_state(wind, drop_state, &des_drop_state);
+
+    // Send message to Pi
+    PiSerial.println(String(des_drop_state.lat) + "," + String(des_drop_state.lon) + "," + String(des_drop_state.heading));
 
     // TODO: Monitor until close enough to drop point and relese payload
 

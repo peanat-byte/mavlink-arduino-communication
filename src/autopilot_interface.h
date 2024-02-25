@@ -1,4 +1,4 @@
-// Code by https://github.com/Kariboo-Corp/TIMU/tree/main
+// Adapted from https://github.com/Kariboo-Corp/TIMU/tree/main
 
 #ifndef AUTOPILOT_INTERFACE_H
 #define AUTOPILOT_INTERFACE_H
@@ -39,6 +39,7 @@ struct Time_Stamps
     uint64_t gps_global_origin;
     uint64_t gps_raw;
     uint64_t gps_status;
+    uint64_t wind;
 
 	void
 	reset_timestamps()
@@ -62,6 +63,7 @@ struct Time_Stamps
         gps_global_origin = 0;
         gps_raw = 0;
         gps_status = 0;
+        wind = 0;
 	}
 
 };
@@ -121,6 +123,9 @@ struct Mavlink_Messages {
     mavlink_gps_global_origin_t gps_global_origin;
     mavlink_gps_raw_int_t gps_raw;
     mavlink_gps_status_t gps_status;
+
+    // Wind
+    mavlink_wind_cov_t wind;
 
 	// Time Stamps
 	Time_Stamps time_stamps;

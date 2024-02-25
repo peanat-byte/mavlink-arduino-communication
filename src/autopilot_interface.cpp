@@ -1,4 +1,4 @@
-// Code by https://github.com/Kariboo-Corp/TIMU/tree/main
+// Adapted from https://github.com/Kariboo-Corp/TIMU/tree/main
 
 #include "autopilot_interface.h"
 
@@ -219,6 +219,14 @@ Mavlink_Messages Autopilot_Interface::read_messages()
                     break;
                 }
 
+                case MAVLINK_MSG_ID_WIND_COV:
+                {
+                    mavlink_msg_wind_cov_decode(&message, &(current_messages.wind));
+                    current_messages.time_stamps.wind = get_time_usec();
+                    this_timestamps.wind = current_messages.time_stamps.wind;
+                    break;
+                }
+
 				default:
 				{
 					// printf("Warning, did not handle message id %i\n",message.msgid);
@@ -248,6 +256,7 @@ Mavlink_Messages Autopilot_Interface::read_messages()
                 // this_timestamps.gps_global_origin          &&
                 // this_timestamps.gps_raw                    &&
                 // this_timestamps.gps_status                 &&
+                // this_timestamps.wind                       &&
 				//this_timestamps.sys_status
 				;
     }
