@@ -40,6 +40,8 @@ struct Time_Stamps
     uint64_t gps_raw;
     uint64_t gps_status;
     uint64_t wind;
+    uint64_t high_latency2;
+    uint64_t servo_output_raw;
 
 	void
 	reset_timestamps()
@@ -64,6 +66,8 @@ struct Time_Stamps
         gps_raw = 0;
         gps_status = 0;
         wind = 0;
+        high_latency2 = 0;
+        servo_output_raw = 0;
 	}
 
 };
@@ -126,6 +130,12 @@ struct Mavlink_Messages {
 
     // Wind
     mavlink_wind_cov_t wind;
+
+    // High Latency 2 (gives a variety of data including wind speed and direction)
+    mavlink_high_latency2_t high_latency2;
+
+    // Servo outputs
+    mavlink_servo_output_raw_t servo_output_raw;
 
 	// Time Stamps
 	Time_Stamps time_stamps;

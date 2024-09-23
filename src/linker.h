@@ -18,6 +18,7 @@ class Linker
 
         int read_message(mavlink_message_t &message);
         int write_message(const mavlink_message_t &message);
+        void request_msg(int msg_id, int frequency);
 
         bool is_running() {
             return is_open;
@@ -30,7 +31,7 @@ class Linker
         
         mavlink_status_t lastStatus;
         bool is_open;
-        int baudrate = 57600;
+        int baudrate = CUBE_BAUD_RATE;
 };
 
 #endif

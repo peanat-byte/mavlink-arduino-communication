@@ -227,6 +227,22 @@ Mavlink_Messages Autopilot_Interface::read_messages()
                     break;
                 }
 
+                case MAVLINK_MSG_ID_HIGH_LATENCY2:
+                {
+                    mavlink_msg_high_latency2_decode(&message, &(current_messages.high_latency2));
+                    current_messages.time_stamps.high_latency2 = get_time_usec();
+                    this_timestamps.high_latency2 = current_messages.time_stamps.high_latency2;
+                    break;
+                }
+
+                case MAVLINK_MSG_ID_SERVO_OUTPUT_RAW:
+                {
+                    mavlink_msg_servo_output_raw_decode(&message, &(current_messages.servo_output_raw));
+                    current_messages.time_stamps.servo_output_raw = get_time_usec();
+                    this_timestamps.servo_output_raw = current_messages.time_stamps.servo_output_raw;
+                    break;
+                }
+
 				default:
 				{
 					// printf("Warning, did not handle message id %i\n",message.msgid);
@@ -238,15 +254,15 @@ Mavlink_Messages Autopilot_Interface::read_messages()
         }
 
         received_all = 
-        		//this_timestamps.heartbeat                  &&
+        		// this_timestamps.heartbeat                  
 				// this_timestamps.battery_status             &&
 				// this_timestamps.radio_status               &&
 				// this_timestamps.local_position_ned         &&
-				// this_timestamps.global_position_int        &&
+				this_timestamps.global_position_int        &&
 				// this_timestamps.position_target_local_ned  &&
 				// this_timestamps.position_target_global_int &&
 				// this_timestamps.highres_imu                &&
-				this_timestamps.attitude
+				// this_timestamps.attitude                   
                 // this_timestamps.attitude_quaternion        &&
                 // this_timestamps.estimator_status           &&
                 // this_timestamps.odometry                   &&
@@ -257,7 +273,9 @@ Mavlink_Messages Autopilot_Interface::read_messages()
                 // this_timestamps.gps_raw                    &&
                 // this_timestamps.gps_status                 &&
                 // this_timestamps.wind                       &&
-				//this_timestamps.sys_status
+                this_timestamps.high_latency2                 &&
+                this_timestamps.servo_output_raw                            
+				// this_timestamps.sys_status
 				;
     }
 
